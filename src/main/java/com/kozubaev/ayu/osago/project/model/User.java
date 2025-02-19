@@ -2,9 +2,7 @@ package com.kozubaev.ayu.osago.project.model;
 
 import jakarta.persistence.*;
 import jdk.jfr.Enabled;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
