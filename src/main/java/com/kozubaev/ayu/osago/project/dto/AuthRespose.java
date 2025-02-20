@@ -1,4 +1,4 @@
-package com.kozubaev.ayu.osago.project.config.dto;
+package com.kozubaev.ayu.osago.project.dto;
 
 import lombok.Data;
 

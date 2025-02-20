@@ -1,8 +1,8 @@
 package com.kozubaev.ayu.osago.project.controller;
 
-import com.kozubaev.ayu.osago.project.config.dto.AuthRespose;
-import com.kozubaev.ayu.osago.project.config.dto.AuthenticationRequest;
-import com.kozubaev.ayu.osago.project.config.dto.RegisterRequest;
+import com.kozubaev.ayu.osago.project.dto.AuthRespose;
+import com.kozubaev.ayu.osago.project.dto.AuthenticationRequest;
+import com.kozubaev.ayu.osago.project.dto.RegisterRequest;
 import com.kozubaev.ayu.osago.project.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
