@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jdk.jfr.Enabled;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -26,15 +27,29 @@ public class User implements UserDetails {
     private String email;
     private String phoneNumber;
     private String password;
+    private String pin;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public User(String username, String phoneNumber, String email, String pin, String password) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.pin = pin;
+        this.password = password;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
