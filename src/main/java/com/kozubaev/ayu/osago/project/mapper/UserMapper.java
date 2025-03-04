@@ -1,12 +1,18 @@
 package com.kozubaev.ayu.osago.project.mapper;
 
+import com.kozubaev.ayu.osago.project.dto.AuthRespose;
 import com.kozubaev.ayu.osago.project.dto.user.UserDTO;
 import com.kozubaev.ayu.osago.project.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-
+    /**
+     * Преобразует объект User в UserDTO.
+     *
+     * @param user объект User, который нужно преобразовать
+     * @return объект UserDTO, заполненный данными из User
+     */
     public UserDTO toDto(User user) {
         if (user == null) {
             return null;
@@ -14,25 +20,10 @@ public class UserMapper {
 
         UserDTO userDTO = new UserDTO();
         userDTO.setUsername(user.getUsername());
-        userDTO.setPhoneNumber(user.getPhoneNumber());
         userDTO.setEmail(user.getEmail());
         userDTO.setPin(user.getPin());
-        // Don't set password in DTO for security reasons
 
         return userDTO;
     }
 
-    public User toEntity(UserDTO userDTO) {
-        if (userDTO == null) {
-            return null;
-        }
-
-        return new User(
-                userDTO.getUsername(),
-                userDTO.getPhoneNumber(),
-                userDTO.getEmail(),
-                userDTO.getPin(),
-                userDTO.getPassword()
-        );
-    }
 }
