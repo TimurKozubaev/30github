@@ -1,7 +1,7 @@
 package com.kozubaev.ayu.osago.project.controller;
 
 import com.kozubaev.ayu.osago.project.dto.AuthRespose;
-import com.kozubaev.ayu.osago.project.dto.AuthenticationRequest;
+import com.kozubaev.ayu.osago.project.dto.LoginRequest;
 import com.kozubaev.ayu.osago.project.dto.RegisterRequest;
 import com.kozubaev.ayu.osago.project.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
@@ -90,10 +89,10 @@ public class AuthController {
             @Parameter(
                     description = "Authentication credentials",
                     required = true,
-                    schema = @Schema(implementation = AuthenticationRequest.class)
+                    schema = @Schema(implementation = LoginRequest.class)
             )
-            @RequestBody AuthenticationRequest request
+            @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(authService.autheticate(request));
+        return ResponseEntity.ok(authService.login(request));
     }
 }
