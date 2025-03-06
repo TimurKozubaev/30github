@@ -4,6 +4,7 @@ import com.kozubaev.ayu.osago.project.dto.AuthRespose;
 import com.kozubaev.ayu.osago.project.dto.LoginRequest;
 import com.kozubaev.ayu.osago.project.dto.RegisterRequest;
 import com.kozubaev.ayu.osago.project.service.AuthService;
+import com.kozubaev.ayu.osago.project.service.otp.OtpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,16 +14,48 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/auth")
 @Tag(name = "Authentication", description = "The Authentication API endpoints")
 public class AuthController {
     private final AuthService authService;
+    private final OtpService otpService;
+
+
+    /**
+     * Отправляет OTP на номер телефона.
+     *
+     * @param phoneNumber Номер телефона
+     * @return Сообщение об успешной отправке
+     */
+    @PostMapping("/send")
+    public String sendOtp(@RequestParam String phoneNumber) {
+        otpService.sendOtp(phoneNumber);
+        return "OTP отправлен на номер: " + phoneNumber;
+    }
+
+    /**
+     * Проверяет введенный OTP.
+     *
+     * @param phoneNumber Номер телефона
+     * @param userOtp     OTP, введенный пользователем
+     * @return Сообщение о результате проверки
+     */
+    @PostMapping("/verify")
+    public String verifyOtp(@RequestParam String phoneNumber, @RequestParam String userOtp) {
+        boolean isOtpValid = otpService.verifyOtp(phoneNumber, userOtp);
+        if (isOtpValid) {
+            return "OTP успешно подтвержден.";
+        } else {
+            return "Неверный OTP. Попробуйте снова.";
+        }
+    }
+
+
+
 
     @Operation(
             summary = "Register a new user",

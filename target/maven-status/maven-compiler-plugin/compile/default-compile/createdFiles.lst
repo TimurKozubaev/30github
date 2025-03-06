@@ -8,10 +8,13 @@ com/kozubaev/ayu/osago/project/model/Car.class
 com/kozubaev/ayu/osago/project/enums/ERole.class
 com/kozubaev/ayu/osago/project/ProjectApplication.class
 com/kozubaev/ayu/osago/project/config/OpenApiConfig.class
+com/kozubaev/ayu/osago/project/service/otp/OtpService.class
 com/kozubaev/ayu/osago/project/model/Person.class
 com/kozubaev/ayu/osago/project/dto/user/UserDTO.class
+com/kozubaev/ayu/osago/project/service/otp/TelegramOTP.class
 com/kozubaev/ayu/osago/project/config/WebMvcConfig.class
 com/kozubaev/ayu/osago/project/dto/otp/OtpData$OtpDataBuilder.class
+com/kozubaev/ayu/osago/project/controller/TelegramController.class
 com/kozubaev/ayu/osago/project/config/JwtAuthenticationEntryPoint.class
 com/kozubaev/ayu/osago/project/controller/AuthController.class
 com/kozubaev/ayu/osago/project/repository/UserRepository.class
@@ -20,8 +23,8 @@ com/kozubaev/ayu/osago/project/dto/AuthRespose.class
 com/kozubaev/ayu/osago/project/service/AuthService.class
 com/kozubaev/ayu/osago/project/exeption/UnauthorizedException.class
 com/kozubaev/ayu/osago/project/model/Role.class
+com/kozubaev/ayu/osago/project/dto/LoginRequest.class
 com/kozubaev/ayu/osago/project/exeption/ErrorResponse.class
-com/kozubaev/ayu/osago/project/dto/AuthenticationRequest.class
 com/kozubaev/ayu/osago/project/dto/RegisterRequest.class
 com/kozubaev/ayu/osago/project/mapper/UserMapper.class
 com/kozubaev/ayu/osago/project/endpoint/Endpoint.class
