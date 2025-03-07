@@ -25,32 +25,23 @@ public class AuthController {
     private final OtpService otpService;
 
 
-    /**
-     * Отправляет OTP на номер телефона.
-     *
-     * @param phoneNumber Номер телефона
-     * @return Сообщение об успешной отправке
-     */
+    // Запрос на отправку OTP
     @PostMapping("/send")
-    public String sendOtp(@RequestParam String phoneNumber) {
-        otpService.sendOtp(phoneNumber);
-        return "OTP отправлен на номер: " + phoneNumber;
+    public ResponseEntity<String> sendOTP(@RequestParam String phoneNumber) {
+        String otp = otpService.generateOTP();
+        otpService.sendOTP(phoneNumber, otp); // Отправка OTP через Telegram
+        otpService.storeOTP(phoneNumber, otp); // Сохранение OTP в хранилище
+        return ResponseEntity.ok("OTP отправлен на номер: " + phoneNumber);
     }
 
-    /**
-     * Проверяет введенный OTP.
-     *
-     * @param phoneNumber Номер телефона
-     * @param userOtp     OTP, введенный пользователем
-     * @return Сообщение о результате проверки
-     */
+    // Запрос на подтверждение OTP
     @PostMapping("/verify")
-    public String verifyOtp(@RequestParam String phoneNumber, @RequestParam String userOtp) {
-        boolean isOtpValid = otpService.verifyOtp(phoneNumber, userOtp);
-        if (isOtpValid) {
-            return "OTP успешно подтвержден.";
+    public ResponseEntity<String> verifyOTP(@RequestParam String phoneNumber, @RequestParam String otpCode) {
+        boolean isVerified = otpService.verifyOTP(phoneNumber, otpCode);
+        if (isVerified) {
+            return ResponseEntity.ok("OTP подтвержден");
         } else {
-            return "Неверный OTP. Попробуйте снова.";
+            return ResponseEntity.status(401).body("Неверный OTP код");
         }
     }
 

@@ -1,56 +1,88 @@
 package com.kozubaev.ayu.osago.project.service.otp;
 
+import com.kozubaev.ayu.osago.project.model.UserChat;
+import com.kozubaev.ayu.osago.project.repository.UserChatRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 @Service
 public class OtpService {
 
-    private static final Map<String, String> otpStorage = new HashMap<>(); // Хранение OTP для каждого номера
+    @Autowired
+    private UserChatRepository userChatRepository;
 
-    public static String generateOtp() {
+    private final Map<String, String> otpStorage = new HashMap<>(); // Хранилище OTP
+    private static final String BOT_TOKEN = "7070472707:AAGBIL2qPcc2ph6Tldq1wZ34l0lRfGsblx4"; // Замените на ваш токен
+
+
+    // Генерация OTP
+    public String generateOTP() {
         Random random = new Random();
-        int otp = 100000 + random.nextInt(900000); // Генерация 6-значного числа
+        int otp = 100000 + random.nextInt(900000); // Генерация 6-значного кода
         return String.valueOf(otp);
     }
-    /**
-     * Генерирует OTP и отправляет его на номер телефона.
-     *
-     * @param phoneNumber Номер телефона
-     */
-    public void sendOtp(String phoneNumber) {
-        String otpCode = generateOtp();
-        otpStorage.put(phoneNumber, otpCode); // Сохраняем OTP для номера
 
-        // Отправляем OTP через Telegram (или другой сервис)
+    // Отправка OTP через Telegram
+    public void sendOTP(String phoneNumber, String otpCode) {
         String chatId = getChatIdByPhoneNumber(phoneNumber); // Получаем chat_id по номеру телефона
-        TelegramOTP.sendOTP(chatId, otpCode);
-
-        System.out.println("OTP отправлен на номер: " + phoneNumber);
+        if (chatId != null) {
+            sendTelegramMessage(chatId, "Ваш OTP код: " + otpCode);
+        }
     }
 
-    /**
-     * Проверяет введенный OTP.
-     *
-     * @param phoneNumber Номер телефона
-     * @param userOtp     OTP, введенный пользователем
-     * @return true, если OTP верный, иначе false
-     */
-    public boolean verifyOtp(String phoneNumber, String userOtp) {
-        String storedOtp = otpStorage.get(phoneNumber);
-        return storedOtp != null && storedOtp.equals(userOtp);
+    // Сохранение OTP в хранилище
+    public void storeOTP(String phoneNumber, String otpCode) {
+        otpStorage.put(phoneNumber, otpCode);
     }
 
-    /**
-     * Получает chat_id по номеру телефона (заглушка).
-     *
-     * @param phoneNumber Номер телефона
-     * @return chat_id
-     */
+    // Проверка OTP
+    public boolean verifyOTP(String phoneNumber, String userEnteredOTP) {
+        String storedOTP = otpStorage.get(phoneNumber);
+        return userEnteredOTP.equals(storedOTP);
+    }
+
+    // Получение chat_id по номеру телефона
     private String getChatIdByPhoneNumber(String phoneNumber) {
-        // Здесь должна быть логика получения chat_id по номеру телефона
-        return "user_chat_id"; // Заглушка
+        UserChat userChat = userChatRepository.findByPhoneNumber(phoneNumber);
+        if (userChat != null) {
+            return userChat.getChatId();
+        }
+        return null; // Если chat_id не найден
+    }
+
+    // Сохранение chat_id в базе данных
+    public void saveChatId(String phoneNumber, String chatId) {
+        UserChat userChat = new UserChat();
+        userChat.setPhoneNumber(phoneNumber);
+        userChat.setChatId(chatId);
+        userChatRepository.save(userChat);
+    }
+
+    // Отправка сообщения через Telegram API
+    private void sendTelegramMessage(String chatId, String message) {
+        try {
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+            String urlString = "https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage?chat_id=" + chatId + "&text=" + encodedMessage;
+
+            URL url = new URL(urlString);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+                System.out.println("OTP sent via Telegram: " + message);
+            } else {
+                System.err.println("Ошибка при отправке OTP. Код ответа: " + responseCode);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
