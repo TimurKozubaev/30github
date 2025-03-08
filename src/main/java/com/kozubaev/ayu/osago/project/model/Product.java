@@ -5,22 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Table(name = "user_chat")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserChat {
-
+@Entity
+@Table(name = "products")
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "phone_number", unique = true, nullable = false)
-    private String phoneNumber;
-
-    @Column(name = "chat_id", nullable = false)
-    private String chatId;
-
-
+    private String title;
+    private String description;
+    private String price;
 }
