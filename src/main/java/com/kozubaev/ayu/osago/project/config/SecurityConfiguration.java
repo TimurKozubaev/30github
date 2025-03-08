@@ -25,7 +25,6 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private static final String[] WHITE_LIST = {
             "/api/v1/auth/**",
-            "/api/v1/tunduk/get-data-by-pin-passport",
             "/api/v1/insurance/**",
             "/v2/api-docs",
             "/v3/api-docs",
