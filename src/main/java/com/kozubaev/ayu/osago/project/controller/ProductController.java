@@ -2,13 +2,9 @@ package com.kozubaev.ayu.osago.project.controller;
 
 import com.kozubaev.ayu.osago.project.model.Product;
 import com.kozubaev.ayu.osago.project.service.ProductService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,9 +20,33 @@ public class ProductController {
         return ResponseEntity.ok(getProduct);
     }
 
+    // Создать продукт
     @PostMapping("/create")
-    public ResponseEntity<Product> create(@RequestBody Product product) {
-        productService.create(product);
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        Product createdProduct = productService.create(product);
+        return ResponseEntity.ok(createdProduct);
+    }
+    // Получить продукт по ID
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Product product = productService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
         return ResponseEntity.ok(product);
     }
+
+    // Обновить продукт по ID
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
+        Product updatedProduct = productService.updateProduct(id, productDetails);
+        return ResponseEntity.ok(updatedProduct);
+    }
+
+    // Удалить продукт по ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
 }
